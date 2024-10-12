@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>User Details</title>
+</head>
+<body>
+<h1>User Details</h1>
+<p><strong>ID:</strong> <span th:text="${user.id}">ID</span></p>
+<p><strong>First Name:</strong> <span th:text="${user.firstName}">First Name</span></p>
+<p><strong>Last Name:</strong> <span th:text="${user.lastName}">Last Name</span></p>
+<p><strong>Email:</strong> <span th:text="${user.email}">Email</span></p>
+<p><strong>Roles:</strong>
+<ul>
+  <li th:each="role : ${user.roles}" th:text="${role.name}">Role Name</li>
+</ul>
+</p>
+<a th:href="@{/admin}">Back to List</a>
+</body>
+</html>
