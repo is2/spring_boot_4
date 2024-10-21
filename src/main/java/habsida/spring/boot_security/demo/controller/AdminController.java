@@ -5,13 +5,17 @@ import habsida.spring.boot_security.demo.model.User;
 import habsida.spring.boot_security.demo.service.RoleService;
 import habsida.spring.boot_security.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@CrossOrigin
+@RestController
+@RequestMapping("/api")
 public class AdminController {
 
     private final UserService userService;
@@ -24,52 +28,31 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String showAllUsers(Model model) {
-        List<User> users = userService.getAll();
-        model.addAttribute("users", users);
-        return "user-list";
+    public ResponseEntity<List<User>> showAllUsers() {
+        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
-
 
     @GetMapping("/admin/{id}")
-    public String showOneUser(@PathVariable("id") long id, Model model) {
-        User user = userService.getById(id);
-        model.addAttribute("user", user);
-        return "user-detail";
+    public ResponseEntity<User> showOneUser(@PathVariable("id") long id) {
+        return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
     }
 
-
-    @GetMapping("/admin/add")
-    public String showAddForm(Model model) {
-        model.addAttribute("user", new User());
-        return "user-form";
-    }
-
-    @PostMapping
-    public String addUser(@ModelAttribute("user") User user) {
+    @PostMapping("/admin")
+    public ResponseEntity<Void> addUser(@RequestBody User user) {
         userService.saveUser(user);
-        return "redirect:/admin"; }
-
-
-    @GetMapping("/admin/edit/{id}")
-    public String showEditForm(@PathVariable("id") long id, Model model) {
-        User user = userService.getById(id);
-        model.addAttribute("user", user);
-        return "user-form";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-    @PostMapping("/admin/update")
-    public String updateUser(@ModelAttribute("user") User user) {
+    @PutMapping("/admin")
+    public ResponseEntity<Void> updateUser(@RequestBody User user) {
         userService.updateUser(user);
-        return "redirect:/admin";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
-    @GetMapping("/admin/delete/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
+    @DeleteMapping("/admin/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) {
         userService.deleteUser(id);
-        return "redirect:/admin";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 

@@ -31,20 +31,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/registration").permitAll()
-                .antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                .antMatchers("/user/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                .antMatchers("/api/**").hasAuthority("ROLE_ADMIN")
+                .antMatchers("/api/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                .antMatchers("/registration").not().fullyAuthenticated()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .successHandler(successUserHandler)
+                .formLogin().loginPage("/login").successHandler(successUserHandler)
                 .permitAll()
                 .and()
                 .logout()
                 .permitAll();
     }
-
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
