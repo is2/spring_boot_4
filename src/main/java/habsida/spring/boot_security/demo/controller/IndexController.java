@@ -5,14 +5,17 @@ import habsida.spring.boot_security.demo.model.User;
 import habsida.spring.boot_security.demo.service.RoleService;
 import habsida.spring.boot_security.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-@RestController
-@RequestMapping("/api")
+@Controller
 public class IndexController {
 
     private final UserService userService;
@@ -25,34 +28,23 @@ public class IndexController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<String> getPage() {
-        return ResponseEntity.ok("Main page content");
+    public String getPage(){
+        return "main-page";
     }
 
     @GetMapping("/login")
-    public ResponseEntity<?> getLogin(@RequestParam(value = "error", required = false) String error,
-                                      @RequestParam(value = "logout", required = false) String logout) {
-        return ResponseEntity.ok().body(Map.of(
-                "error", error != null,
-                "logout", logout != null
-        ));
+    public String getLogin() {
+        return "login";
     }
 
     @GetMapping("/registration")
-    public ResponseEntity<?> registration() {
-        return ResponseEntity.ok().body(Map.of(
-                "userFormRegistration", new User(),
-                "allRoles", roleService.getAllRoles()
-        ));
+    public String registration(Model model) {
+        return "registration";
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<String> addNewUser(@RequestBody User user,
-                                             @RequestParam("roles") List<Long> roleIds) {
-        List<Role> roles = roleService.findByIdRoles(roleIds);
-        user.setRoles(roles);
-        userService.saveUser(user);
-        return ResponseEntity.ok("User registered successfully");
+    public String addNewUser() {
+        return "redirect:/login";
     }
 }
 

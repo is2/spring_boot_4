@@ -5,17 +5,13 @@ import habsida.spring.boot_security.demo.model.User;
 import habsida.spring.boot_security.demo.service.RoleService;
 import habsida.spring.boot_security.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin
-@RestController
-@RequestMapping("/api")
+@Controller
 public class AdminController {
 
     private final UserService userService;
@@ -28,31 +24,42 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public ResponseEntity<List<User>> showAllUsers() {
-        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+    public String showAllUsers() {
+        return "user-list";
     }
+
 
     @GetMapping("/admin/{id}")
-    public ResponseEntity<User> showOneUser(@PathVariable("id") long id) {
-        return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
+    public String showOneUser() {
+        return "user-detail";
     }
 
-    @PostMapping("/admin")
-    public ResponseEntity<Void> addUser(@RequestBody User user) {
-        userService.saveUser(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+    @GetMapping("/admin/add")
+    public String showAddForm() {
+        return "user-form";
     }
 
-    @PutMapping("/admin")
-    public ResponseEntity<Void> updateUser(@RequestBody User user) {
-        userService.updateUser(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+    @PostMapping
+    public String addUser() {
+        return "redirect:/admin"; }
+
+
+    @GetMapping("/admin/edit/{id}")
+    public String showEditForm() {
+        return "user-form";
     }
 
-    @DeleteMapping("/admin/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) {
-        userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+
+    @PostMapping("/admin/update")
+    public String updateUser() {
+        return "redirect:/admin";
+    }
+
+
+    @GetMapping("/admin/delete/{id}")
+    public String deleteUser() {
+        return "redirect:/admin";
     }
 }
 
