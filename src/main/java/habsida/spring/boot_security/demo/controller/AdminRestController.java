@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 public class AdminRestController {
 
     private final UserService userService;
@@ -34,7 +34,6 @@ public class AdminRestController {
         User user = userService.getById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-
 
     @PostMapping
     public ResponseEntity<String> addUser(@RequestBody User user) {

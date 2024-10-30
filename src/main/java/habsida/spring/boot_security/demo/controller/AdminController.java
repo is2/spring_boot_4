@@ -1,6 +1,5 @@
 package habsida.spring.boot_security.demo.controller;
 
-
 import habsida.spring.boot_security.demo.model.User;
 import habsida.spring.boot_security.demo.service.RoleService;
 import habsida.spring.boot_security.demo.service.UserService;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
 
     private final UserService userService;
@@ -23,43 +23,48 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/admin")
-    public String showAllUsers() {
+    @GetMapping
+    public String showAllUsers(Model model) {
+        List<User> users = userService.getAll();
+        model.addAttribute("users", users);
         return "user-list";
     }
 
-
-    @GetMapping("/admin/{id}")
-    public String showOneUser() {
+    @GetMapping("/{id}")
+    public String showOneUser(@PathVariable("id") long id, Model model) {
+        User user = userService.getById(id);
+        model.addAttribute("user", user);
         return "user-detail";
     }
 
-
-    @GetMapping("/admin/add")
-    public String showAddForm() {
+    @GetMapping("/add")
+    public String showAddForm(Model model) {
+        model.addAttribute("user", new User());
         return "user-form";
     }
 
-    @PostMapping
-    public String addUser() {
-        return "redirect:/admin"; }
-
-
-    @GetMapping("/admin/edit/{id}")
-    public String showEditForm() {
-        return "user-form";
-    }
-
-
-    @PostMapping("/admin/update")
-    public String updateUser() {
+    @PostMapping("/add")
+    public String addUser(@ModelAttribute("user") User user) {
+        userService.saveUser(user);
         return "redirect:/admin";
     }
 
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable("id") long id, Model model) {
+        User user = userService.getById(id);
+        model.addAttribute("user", user);
+        return "user-form";
+    }
 
-    @GetMapping("/admin/delete/{id}")
-    public String deleteUser() {
+    @PostMapping("/update")
+    public String updateUser(@ModelAttribute("user") User user) {
+        userService.updateUser(user);
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") long id) {
+        userService.deleteUser(id);
         return "redirect:/admin";
     }
 }
-

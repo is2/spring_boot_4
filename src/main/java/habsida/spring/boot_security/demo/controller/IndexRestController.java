@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/api")
 public class IndexRestController {
 
     private final UserService userService;
@@ -23,8 +24,7 @@ public class IndexRestController {
         this.roleService = roleService;
     }
 
-
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<String> getPage() {
         return ResponseEntity.ok("Main page content");
     }
@@ -49,10 +49,8 @@ public class IndexRestController {
     @PostMapping("/registration")
     public ResponseEntity<String> addNewUser(@RequestBody User user,
                                              @RequestParam("roles") List<Long> roleIds) {
-        List<Role> roles = roleService.findByIdRoles(roleIds);
-        user.setRoles(roles);
+        user.setRoles(roleService.findByIdRoles(roleIds));
         userService.saveUser(user);
         return ResponseEntity.ok("User registered successfully");
     }
 }
-

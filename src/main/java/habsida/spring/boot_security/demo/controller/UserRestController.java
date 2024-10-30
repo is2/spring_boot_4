@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RestController
+@RequestMapping("/api/user")
 public class UserRestController {
 
     private final UserServiceImp userService;
@@ -20,7 +21,7 @@ public class UserRestController {
         this.userService = userService;
     }
 
-    @GetMapping("/user")
+    @GetMapping
     public ResponseEntity<User> userGet(Principal principal) {
         User user = userService.findByUsername(principal.getName());
         return ResponseEntity.ok(user);
